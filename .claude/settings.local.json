@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -X POST http://localhost:3000/gerar-fatura -H 'Content-Type: application/json' -d '{:*)",
+      "Bash(pkill -f \"node server.js\")",
+      "Bash(open /Users/floriani/Desktop/gerador-faturas/teste-fatura.html)",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}

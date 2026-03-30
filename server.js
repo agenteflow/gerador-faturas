@@ -43,28 +43,24 @@ function gerarHtmlFatura(dados) {
   // Gera os trechos (voos)
   const trechosHtml = trechos.map(t => `
     <tr>
-      <td colspan="7" style="padding: 2px 5px; border-left: 1px solid #999; border-right: none; font-size: 9px; color: #444;">
-        Cia: &nbsp; Voo: &nbsp; Classe: &nbsp; Origem / Destino:
-      </td>
-      <td style="padding: 2px 5px; border-right: 1px solid #999; border-left: none; font-size: 9px; color: #444; text-align: right;">
-        Sa&iacute;da / Chegada:
-      </td>
+      <td style="padding: 2px 5px; border-left: 1px solid #999; font-size: 9px; color: #444;">Cia:</td>
+      <td style="padding: 2px 5px; font-size: 9px; color: #444;">Voo:</td>
+      <td style="padding: 2px 5px; font-size: 9px; color: #444;">Classe:</td>
+      <td style="padding: 2px 5px; font-size: 9px; color: #444;">Origem:</td>
+      <td style="padding: 2px 5px; font-size: 9px; color: #444;">Destino:</td>
+      <td style="padding: 2px 5px; font-size: 9px; color: #444;">Sa&iacute;da:</td>
+      <td style="padding: 2px 5px; font-size: 9px; color: #444;">Chegada:</td>
+      <td style="padding: 2px 5px; border-right: 1px solid #999; font-size: 9px; color: #444;">&nbsp;</td>
     </tr>
     <tr>
-      <td colspan="7" style="padding: 1px 5px 1px 10px; border-left: 1px solid #999; border-right: none; font-size: 9px;">
-        ${t.cia || ''} &nbsp;&nbsp; ${t.voo || ''} &nbsp;&nbsp; ${t.classe || ''} &nbsp;&nbsp; ${t.origem || ''}
-      </td>
-      <td style="padding: 1px 5px; border-right: 1px solid #999; border-left: none; font-size: 9px; text-align: right;">
-        ${t.saida || ''}
-      </td>
-    </tr>
-    <tr>
-      <td colspan="7" style="padding: 1px 5px 3px 53px; border-left: 1px solid #999; border-right: none; border-bottom: 1px solid #ddd; font-size: 9px;">
-        ${t.destino || ''}
-      </td>
-      <td style="padding: 1px 5px 3px 5px; border-right: 1px solid #999; border-left: none; border-bottom: 1px solid #ddd; font-size: 9px; text-align: right;">
-        ${t.chegada || ''}
-      </td>
+      <td style="padding: 1px 5px 3px 5px; border-left: 1px solid #999; border-bottom: 1px solid #ddd; font-size: 9px;">${t.cia || ''}</td>
+      <td style="padding: 1px 5px 3px 5px; border-bottom: 1px solid #ddd; font-size: 9px;">${t.voo || ''}</td>
+      <td style="padding: 1px 5px 3px 5px; border-bottom: 1px solid #ddd; font-size: 9px;">${t.classe || ''}</td>
+      <td style="padding: 1px 5px 3px 5px; border-bottom: 1px solid #ddd; font-size: 9px;">${t.origem || ''}</td>
+      <td style="padding: 1px 5px 3px 5px; border-bottom: 1px solid #ddd; font-size: 9px;">${t.destino || ''}</td>
+      <td style="padding: 1px 5px 3px 5px; border-bottom: 1px solid #ddd; font-size: 9px;">${t.saida || ''}</td>
+      <td style="padding: 1px 5px 3px 5px; border-bottom: 1px solid #ddd; font-size: 9px;">${t.chegada || ''}</td>
+      <td style="padding: 1px 5px 3px 5px; border-right: 1px solid #999; border-bottom: 1px solid #ddd; font-size: 9px;">&nbsp;</td>
     </tr>
   `).join('');
 

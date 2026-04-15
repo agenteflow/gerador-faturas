@@ -34,17 +34,17 @@ function gerarHtmlFatura(dados) {
   const pagamento = dados.pagamento || {};
 
   // Logo: URL, base64, ou vazio
-  let logoHtml = '<div style="width:80px; height:70px;"></div>';
+  let logoHtml = '<div style="width:90px; height:90px;"></div>';
   if (empresa.logo) {
     const src = empresa.logo.startsWith('data:') ? empresa.logo : empresa.logo;
-    logoHtml = `<img src="${src}" style="max-height: 70px; max-width: 80px; object-fit: contain;" />`;
+    logoHtml = `<div style="width: 90px; height: 90px; border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center;"><img src="${src}" style="width: 100%; height: 100%; object-fit: cover;" /></div>`;
   }
 
   // Gera os trechos (voos)
   const trechosHtml = trechos.map(t => `
     <tr>
       <td style="padding: 2px 5px; border-left: 1px solid #999; font-size: 9px; color: #444;">Cia:</td>
-      <td style="padding: 2px 5px; font-size: 9px; color: #444;">Voo:</td>
+      <td style="padding: 2px 5px; font-size: 9px; color: #444;">Informa&ccedil;&otilde;es:</td>
       <td style="padding: 2px 5px; font-size: 9px; color: #444;">Classe:</td>
       <td style="padding: 2px 5px; font-size: 9px; color: #444;">Origem:</td>
       <td style="padding: 2px 5px; font-size: 9px; color: #444;">Destino:</td>
@@ -98,7 +98,7 @@ function gerarHtmlFatura(dados) {
   <!-- ========== HEADER ========== -->
   <table style="width: 100%; margin-bottom: 12px;">
     <tr>
-      <td style="width: 90px; vertical-align: top;">
+      <td style="width: 90px; vertical-align: top; padding: 0;">
         ${logoHtml}
       </td>
       <td style="vertical-align: top; padding-left: 10px;">
@@ -198,11 +198,11 @@ function gerarHtmlFatura(dados) {
     </tr>
   </table>
 
-  <!-- ========== CIA AÉREA / LOCALIZADOR ========== -->
+  <!-- ========== FORNECEDOR / LOCALIZADOR ========== -->
   <table style="width: 100%; border: 1px solid #999; margin-bottom: 0; border-top: none;">
     <tr>
       <td style="padding: 2px 5px; border: 1px solid #999; border-top: none; font-size: 9px; width: 50%;">
-        <span style="font-size: 8px; color: #444;">Cia A&eacute;rea:</span><br>${voo.ciaAerea || ''}
+        <span style="font-size: 8px; color: #444;">Fornecedor:</span><br>${voo.ciaAerea || ''}
       </td>
       <td style="padding: 2px 5px; border: 1px solid #999; border-top: none; font-size: 9px; width: 50%;">
         <span style="font-size: 8px; color: #444;">Localizador:</span><br>${voo.localizador || ''}

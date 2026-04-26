@@ -42,7 +42,7 @@ function gerarHtmlFatura(dados) {
 
   // Gera os trechos (voos)
   const trechosHtml = trechos.map(t => `
-    <tr>
+    <tr style="page-break-inside: avoid;">
       <td style="padding: 2px 5px; border-left: 1px solid #999; font-size: 9px; color: #444;">Cia:</td>
       <td style="padding: 2px 5px; font-size: 9px; color: #444;">Informa&ccedil;&otilde;es:</td>
       <td style="padding: 2px 5px; font-size: 9px; color: #444;">Classe:</td>
@@ -52,7 +52,7 @@ function gerarHtmlFatura(dados) {
       <td style="padding: 2px 5px; font-size: 9px; color: #444;">Chegada:</td>
       <td style="padding: 2px 5px; border-right: 1px solid #999; font-size: 9px; color: #444;">&nbsp;</td>
     </tr>
-    <tr>
+    <tr style="page-break-inside: avoid;">
       <td style="padding: 1px 5px 3px 5px; border-left: 1px solid #999; border-bottom: 1px solid #ddd; font-size: 9px;">${t.cia || ''}</td>
       <td style="padding: 1px 5px 3px 5px; border-bottom: 1px solid #ddd; font-size: 9px;">${t.voo || ''}</td>
       <td style="padding: 1px 5px 3px 5px; border-bottom: 1px solid #ddd; font-size: 9px;">${t.classe || ''}</td>
@@ -66,7 +66,7 @@ function gerarHtmlFatura(dados) {
 
   // Gera os passageiros
   const passageirosHtml = passageiros.map(p => `
-    <tr>
+    <tr style="page-break-inside: avoid;">
       <td style="padding: 2px 5px; border: 1px solid #999; font-size: 9px;">${p.nome || ''}</td>
       <td style="padding: 2px 5px; border: 1px solid #999; font-size: 9px;">${p.bilhete || ''}</td>
       <td style="padding: 2px 5px; border: 1px solid #999; font-size: 9px;">${p.custoPax || ''}</td>
@@ -276,25 +276,35 @@ function gerarHtmlFatura(dados) {
     </tr>
   </table>
 
-  <!-- ========== ACEITE (fixo no rodapé) ========== -->
-  <table style="width: 100%; border-top: 1px solid #999; position: fixed; bottom: 50px; left: 35px; right: 35px; width: calc(100% - 70px);">
+  <!-- ========== ACEITE (fluxo normal, vai pra ultima pagina) ========== -->
+  <table style="width: 100%; border-top: 1px solid #999; margin-top: 25px; page-break-inside: avoid;">
     <tr>
-      <td style="padding-top: 8px; font-size: 9px; text-align: center;">
+      <td style="padding-top: 10px; font-size: 9px; text-align: center;">
         ACEITE: ______________________________________________ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; DATA: ______________________
       </td>
     </tr>
   </table>
 
-  <!-- ========== DATA GERAÇÃO + PÁGINA ========== -->
-  <table style="width: 100%; position: fixed; bottom: 25px; left: 35px; right: 35px; width: calc(100% - 70px);">
-    <tr>
-      <td style="font-size: 8px; color: #666;">${fatura.dataGeracaoExtenso || ''}</td>
-      <td style="font-size: 8px; color: #666; text-align: right;">P&aacute;gina 1 de 1</td>
-    </tr>
-  </table>
-
 </body>
 </html>`;
+}
+
+// ============================================
+// TEMPLATE DO FOOTER (renderizado em todas as pa&#769;ginas pelo Puppeteer)
+// ============================================
+function gerarFooterHtml(dados) {
+  const fatura = (dados && dados.fatura) || {};
+  const dataGeracao = fatura.dataGeracaoExtenso || '';
+  return `
+    <div style="width: 100%; font-family: Arial, Helvetica, sans-serif; font-size: 8px; color: #666; padding: 0 35px;">
+      <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+          <td style="text-align: left;">${dataGeracao}</td>
+          <td style="text-align: right;">P&aacute;gina <span class="pageNumber"></span> de <span class="totalPages"></span></td>
+        </tr>
+      </table>
+    </div>
+  `;
 }
 
 // ============================================
@@ -322,7 +332,10 @@ app.post('/gerar-fatura', async (req, res) => {
     const pdf = await page.pdf({
       format: 'A4',
       printBackground: true,
-      margin: { top: '10px', right: '10px', bottom: '10px', left: '10px' }
+      displayHeaderFooter: true,
+      headerTemplate: '<span></span>',
+      footerTemplate: gerarFooterHtml(dados),
+      margin: { top: '10px', right: '10px', bottom: '40px', left: '10px' }
     });
 
     await browser.close();

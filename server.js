@@ -267,7 +267,11 @@ function gerarHtmlFatura(dados) {
         Titular: ${pagamento.titular || ''}<br>
         CNPJ: ${pagamento.cnpj || ''}<br>
         CHAVE PIX E-MAIL: ${pagamento.chavePix || ''}<br>
-        Duvidas entre em contato atraves do e-mail: ${pagamento.emailDuvidas || ''}
+        Duvidas entre em contato atraves do e-mail: ${pagamento.emailDuvidas || ''}${pagamento.observacoes ? `
+        <div style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed #bbb;">
+          <strong style="font-size: 8px; color: #444;">Observa&ccedil;&otilde;es:</strong><br>
+          <span style="white-space: pre-wrap;">${pagamento.observacoes}</span>
+        </div>` : ''}
       </td>
     </tr>
   </table>

@@ -308,23 +308,39 @@ function gerarFooterHtml(dados) {
 }
 
 // ============================================
+// BROWSER COMPARTILHADO (evita vazamento de processos do Chrome)
+// ============================================
+let browserPromise = null;
+
+async function obterBrowser() {
+  if (!browserPromise) {
+    browserPromise = puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    }).then(browser => {
+      browser.on('disconnected', () => { browserPromise = null; });
+      return browser;
+    }).catch(err => {
+      browserPromise = null;
+      throw err;
+    });
+  }
+  return browserPromise;
+}
+
+// ============================================
 // ROTA PRINCIPAL - GERAR PDF
 // ============================================
 app.post('/gerar-fatura', async (req, res) => {
   console.log('Recebendo pedido de fatura...');
 
+  let page;
   try {
     const dados = req.body;
     const html = gerarHtmlFatura(dados);
 
-    console.log('Abrindo navegador...');
-
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
-
-    const page = await browser.newPage();
+    const browser = await obterBrowser();
+    page = await browser.newPage();
     await page.setContent(html, { waitUntil: 'networkidle0' });
 
     console.log('Gerando PDF...');
@@ -338,8 +354,6 @@ app.post('/gerar-fatura', async (req, res) => {
       margin: { top: '10px', right: '10px', bottom: '40px', left: '10px' }
     });
 
-    await browser.close();
-
     console.log('PDF gerado com sucesso!');
 
     res.contentType('application/pdf');
@@ -351,6 +365,10 @@ app.post('/gerar-fatura', async (req, res) => {
       erro: 'Falha ao gerar PDF',
       detalhes: erro.message
     });
+  } finally {
+    if (page) {
+      await page.close().catch(() => {});
+    }
   }
 });
 
